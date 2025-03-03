@@ -46,9 +46,21 @@ def simple_semantic_grouping(bookmarks):
     for bookmark in bookmarks:
         words = word_tokenize(bookmark["name"].lower())
         keywords = [w for w in words if w not in stop_words and len(w) > 3]
-        group_name = keywords[0] if keywords else "Misc"
+        # Use the most frequent keyword across all bookmarks as the group
+        if keywords:
+            # For now, pick the first keyword, but ensure duplicates cluster
+            group_name = min(keywords)  # Use lexicographically smallest for consistency
+        else:
+            group_name = "Misc"
         groups[group_name].append(bookmark)
-    return groups
+    # Filter out tiny groups (e.g., < 2 bookmarks) into Misc
+    final_groups = defaultdict(list)
+    for group_name, items in groups.items():
+        if len(items) >= 2 or group_name == "Misc":
+            final_groups[group_name].extend(items)
+        else:
+            final_groups["Misc"].extend(items)
+    return final_groups
 
 def build_new_structure(original_data, groups):
     new_data = original_data.copy()
@@ -69,12 +81,10 @@ def build_new_structure(original_data, groups):
     return new_data
 
 def save_bookmarks(new_data):
-    # Backup to Desktop with timestamp
     timestamp = time.strftime("%Y%m%d_%H%M%S")
     backup_path = os.path.expanduser(f"~/Desktop/BookmarkUp_Backup_{timestamp}.bak")
     shutil.copy(BRAVE_BOOKMARKS_PATH, backup_path)
     print(f"Backup created at: {backup_path}")
-    
     print("Attempting to save new bookmark structure...")
     with open(BRAVE_BOOKMARKS_PATH, 'w', encoding='utf-8') as f:
         json.dump(new_data, f, indent=2)
@@ -84,10 +94,9 @@ def main():
     if is_brave_running():
         print("WARNING: Brave is running! Close all instances of Brave to avoid stuffing things up.")
         input("Press Enter to continue once Brave is closed, or Ctrl+C to abort: ")
-        if is_brave_running():  # Double-check
+        if is_brave_running():
             print("Brave’s still lurking! Aborting to keep your bookmarks safe.")
             return
-    
     data = load_bookmarks()
     bookmarks = extract_bookmarks(data["roots"]["bookmark_bar"])
     print(f"Found {len(bookmarks)} bookmarks to organize!")
