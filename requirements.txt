@@ -1,2 +1,7 @@
-nltk
-psutil
+
+#### `requirements.txt` (v1.2)
+```plaintext
+# Bookmark Up v1.6 Dependencies - March 2025
+nltk  # v3.8+ for semantic grouping (word_tokenize, stopwords)
+psutil  # v5.x.x for checking if Brave is running
+# No additional packages needed—html.escape is built-in!
