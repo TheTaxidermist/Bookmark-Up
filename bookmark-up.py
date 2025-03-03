@@ -5,8 +5,9 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
-# Download NLTK data (run once)
-nltk.download('punkt')
+# Download NLTK data (run once, updated for punkt_tab)
+nltk.download('punkt')       # Legacy punkt resource
+nltk.download('punkt_tab')   # New tokenizer resource
 nltk.download('stopwords')
 
 # Path to Brave bookmarks (Mac-specific)
@@ -14,7 +15,7 @@ BRAVE_BOOKMARKS_PATH = os.path.expanduser(
     "~/Library/Application Support/BraveSoftware/Brave-Browser/Default/Bookmarks"
 )
 
-# Taxidermist’s Welcome
+# Taxidermist’s cheesy welcome
 print("Welcome to Bookmark Up! Crafted by The Taxidermist at AD:HOC Codeworks—let’s mount those bookmarks beautifully!")
 
 def load_bookmarks():
