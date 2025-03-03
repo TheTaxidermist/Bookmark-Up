@@ -14,13 +14,16 @@ BRAVE_BOOKMARKS_PATH = os.path.expanduser(
     "~/Library/Application Support/BraveSoftware/Brave-Browser/Default/Bookmarks"
 )
 
-print("Welcome to Bookmark Up! Let’s spruce up those bookmarks, eh?")
+# Taxidermist’s Welcome
+print("Welcome to Bookmark Up! Crafted by The Taxidermist at AD:HOC Codeworks—let’s mount those bookmarks beautifully!")
 
 def load_bookmarks():
+    """Load the Brave Bookmarks JSON file."""
     with open(BRAVE_BOOKMARKS_PATH, 'r', encoding='utf-8') as f:
         return json.load(f)
 
 def extract_bookmarks(node, bookmarks_list=None):
+    """Recursively extract all bookmarks from the JSON structure."""
     if bookmarks_list is None:
         bookmarks_list = []
     if "children" in node:
@@ -32,6 +35,7 @@ def extract_bookmarks(node, bookmarks_list=None):
     return bookmarks_list
 
 def simple_semantic_grouping(bookmarks):
+    """Group bookmarks by keywords in their names."""
     stop_words = set(stopwords.words('english'))
     groups = defaultdict(list)
     for bookmark in bookmarks:
@@ -42,6 +46,7 @@ def simple_semantic_grouping(bookmarks):
     return groups
 
 def build_new_structure(groups):
+    """Create a new bookmark hierarchy from grouped bookmarks."""
     new_bookmark_bar = {
         "children": [],
         "name": "Bookmark Bar",
@@ -64,16 +69,17 @@ def build_new_structure(groups):
     }
 
 def save_bookmarks(new_data):
+    """Save the updated structure back to the Bookmarks file."""
     with open(BRAVE_BOOKMARKS_PATH, 'w', encoding='utf-8') as f:
         json.dump(new_data, f, indent=2)
-    print("Bookmarks updated! Check out your shiny new structure in Brave!")
+    print("Bookmarks stuffed and mounted! Check Brave for The Taxidermist’s handiwork!")
 
 def main():
     data = load_bookmarks()
     bookmarks = extract_bookmarks(data["roots"]["bookmark_bar"])
     print(f"Found {len(bookmarks)} bookmarks to organize!")
     grouped_bookmarks = simple_semantic_grouping(bookmarks)
-    print(f"Grouped into {len(grouped_bookmarks)} categories!")
+    print(f"Mounted into {len(grouped_bookmarks)} categories by AD:HOC Codeworks!")
     new_structure = build_new_structure(grouped_bookmarks)
     save_bookmarks(new_structure)
 
@@ -81,6 +87,6 @@ if __name__ == "__main__":
     try:
         main()
     except FileNotFoundError:
-        print("Oops! Couldn’t find your Brave Bookmarks file. Check the path!")
+        print("Oops! The Taxidermist couldn’t find your Brave Bookmarks file. Check the path!")
     except Exception as e:
-        print(f"Uh-oh, something went wonky: {e}")
+        print(f"Uh-oh, taxidermy gone wrong: {e}")
