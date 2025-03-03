@@ -9,15 +9,22 @@ A cheesy, privacy-first tool to semantically organize your Brave Browser bookmar
 
 ## Setup
 1. Install Python 3.x.
-2. Install dependencies: `pip install -r requirements.txt`.
-3. Run: `python bookmark_up.py`.
+2. Install dependencies: `pip install -r requirements.txt` (includes `psutil` for Brave checks).
+3. **Close Brave Browser** (all instances!).
+4. Run: `python bookmark_up.py`.
 
 ## Requirements
 - Brave Browser (Mac path pre-set; tweak for Windows/Linux).
-- `nltk` library for lightweight semantic magic.
+- `nltk` and `psutil` libraries.
 
-## Contributing
-Got a wild idea? Fork this repo, tweak the stuffing, and send a PR! The Taxidermist welcomes all at AD:HOC Codeworks.
+## Important Notes
+- **Close Brave First**: Running with Brave open might wipe your bookmarks (oops!). The script warns you and waits for Enter if Brave’s detected.
+- **Backup**: A copy of your original `Bookmarks` file is saved to `~/Desktop/BookmarkUp_Backup_[timestamp].bak` before changes. Keep it safe!
+- **Restore**: If taxidermy goes wrong, quit Brave, replace `Bookmarks` with your backup, and relaunch (or Import from File, within Brave if prompted.)
 
-## License
-MIT License - Free for the community to use, modify, and enjoy!
+## Troubleshooting
+- **NLTK Error**: If `punkt_tab` is missing:
+  ```bash
+  python -c "import nltk; nltk.download('punkt_tab')"
+  
+- **HTTP 404 Error**: If you see a `404` from `127.0.0.1:11434`, check for a local server (e.g., Ollama) running. Kill it with `lsof -i :11434` and `kill -9 <PID>`, then retry.
