@@ -4,27 +4,32 @@ from collections import defaultdict
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+import psutil
+import shutil
+import time
 
-# Download NLTK data (run once, updated for punkt_tab)
-nltk.download('punkt')       # Legacy punkt resource
-nltk.download('punkt_tab')   # New tokenizer resource
+nltk.download('punkt')
+nltk.download('punkt_tab')
 nltk.download('stopwords')
 
-# Path to Brave bookmarks (Mac-specific)
 BRAVE_BOOKMARKS_PATH = os.path.expanduser(
     "~/Library/Application Support/BraveSoftware/Brave-Browser/Default/Bookmarks"
 )
 
-# Taxidermist’s cheesy welcome
+def is_brave_running():
+    for proc in psutil.process_iter(['name']):
+        if 'Brave' in proc.info['name']:
+            return True
+    return False
+
+print(f"Targeting Bookmarks file at: {BRAVE_BOOKMARKS_PATH}")
 print("Welcome to Bookmark Up! Crafted by The Taxidermist at AD:HOC Codeworks—let’s mount those bookmarks beautifully!")
 
 def load_bookmarks():
-    """Load the Brave Bookmarks JSON file."""
     with open(BRAVE_BOOKMARKS_PATH, 'r', encoding='utf-8') as f:
         return json.load(f)
 
 def extract_bookmarks(node, bookmarks_list=None):
-    """Recursively extract all bookmarks from the JSON structure."""
     if bookmarks_list is None:
         bookmarks_list = []
     if "children" in node:
@@ -36,7 +41,6 @@ def extract_bookmarks(node, bookmarks_list=None):
     return bookmarks_list
 
 def simple_semantic_grouping(bookmarks):
-    """Group bookmarks by keywords in their names."""
     stop_words = set(stopwords.words('english'))
     groups = defaultdict(list)
     for bookmark in bookmarks:
@@ -46,8 +50,8 @@ def simple_semantic_grouping(bookmarks):
         groups[group_name].append(bookmark)
     return groups
 
-def build_new_structure(groups):
-    """Create a new bookmark hierarchy from grouped bookmarks."""
+def build_new_structure(original_data, groups):
+    new_data = original_data.copy()
     new_bookmark_bar = {
         "children": [],
         "name": "Bookmark Bar",
@@ -61,27 +65,35 @@ def build_new_structure(groups):
             "date_added": bookmarks[0]["date_added"]
         }
         new_bookmark_bar["children"].append(folder)
-    return {
-        "roots": {
-            "bookmark_bar": new_bookmark_bar,
-            "other": {"children": [], "name": "Other Bookmarks", "type": "folder"},
-            "synced": {"children": [], "name": "Synced Bookmarks", "type": "folder"}
-        }
-    }
+    new_data["roots"]["bookmark_bar"] = new_bookmark_bar
+    return new_data
 
 def save_bookmarks(new_data):
-    """Save the updated structure back to the Bookmarks file."""
+    # Backup to Desktop with timestamp
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
+    backup_path = os.path.expanduser(f"~/Desktop/BookmarkUp_Backup_{timestamp}.bak")
+    shutil.copy(BRAVE_BOOKMARKS_PATH, backup_path)
+    print(f"Backup created at: {backup_path}")
+    
+    print("Attempting to save new bookmark structure...")
     with open(BRAVE_BOOKMARKS_PATH, 'w', encoding='utf-8') as f:
         json.dump(new_data, f, indent=2)
-    print("Bookmarks stuffed and mounted! Check Brave for The Taxidermist’s handiwork!")
+    print(f"Saved to {BRAVE_BOOKMARKS_PATH}! Relaunch Brave to see The Taxidermist’s handiwork!")
 
 def main():
+    if is_brave_running():
+        print("WARNING: Brave is running! Close all instances of Brave to avoid stuffing things up.")
+        input("Press Enter to continue once Brave is closed, or Ctrl+C to abort: ")
+        if is_brave_running():  # Double-check
+            print("Brave’s still lurking! Aborting to keep your bookmarks safe.")
+            return
+    
     data = load_bookmarks()
     bookmarks = extract_bookmarks(data["roots"]["bookmark_bar"])
     print(f"Found {len(bookmarks)} bookmarks to organize!")
     grouped_bookmarks = simple_semantic_grouping(bookmarks)
     print(f"Mounted into {len(grouped_bookmarks)} categories by AD:HOC Codeworks!")
-    new_structure = build_new_structure(grouped_bookmarks)
+    new_structure = build_new_structure(data, grouped_bookmarks)
     save_bookmarks(new_structure)
 
 if __name__ == "__main__":
@@ -89,5 +101,7 @@ if __name__ == "__main__":
         main()
     except FileNotFoundError:
         print("Oops! The Taxidermist couldn’t find your Brave Bookmarks file. Check the path!")
+    except PermissionError:
+        print("Yikes! No permission to write to the Bookmarks file. Try running with sudo or check perms!")
     except Exception as e:
         print(f"Uh-oh, taxidermy gone wrong: {e}")
