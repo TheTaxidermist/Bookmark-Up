@@ -2,9 +2,9 @@
 A cheesy, privacy-first tool to semantically organize your Brave Browser bookmarks, crafted by The Taxidermist at AD:HOC Codeworks.
 
 ## What It Does
-- Reads your Brave `Bookmarks` file (locally, no funny business).
-- Groups bookmarks into fewer, smarter folders (e.g., merges singletons into "Up Misc").
-- Updates your bookmark list with a new, taxidermied hierarchy.
+- Reads your Brave `Bookmarks` file (locally, no sync nonsense).
+- Groups 215 bookmarks into ~22 smart folders (e.g., "Python", "Misc"), merging singletons into "Misc".
+- Clears old junk for a fresh hierarchy.
 - No network calls, no personal data access—just pure bookmark stuffing!
 
 ## Setup
