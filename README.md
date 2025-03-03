@@ -1,5 +1,5 @@
 # Bookmark Up
-A cheesy, privacy-first tool to semantically organize your Brave Browser bookmarks, crafted by The Taxidermist at AD:HOC Codeworks.
+A simple, privacy-first tool to semantically organize your Brave Browser bookmarks, crafted by The Taxidermist at AD:HOC Codeworks.
 
 ## What It Does
 - Reads your Brave `Bookmarks` file (locally, no funny business).
