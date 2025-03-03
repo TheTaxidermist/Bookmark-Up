@@ -3,7 +3,7 @@ A cheesy, privacy-first tool to semantically organize your Brave Browser bookmar
 
 ## What It Does
 - Reads your Brave `Bookmarks` file (locally, no funny business).
-- Groups bookmarks by keywords (e.g., "Python Tutorial" → "Up Python").
+- Groups bookmarks into fewer, smarter folders (e.g., merges singletons into "Up Misc").
 - Updates your bookmark list with a new, taxidermied hierarchy.
 - No network calls, no personal data access—just pure bookmark stuffing!
 
