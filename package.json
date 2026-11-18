@@ -1,0 +1,8 @@
+{
+  "name": "bookmark-up-v2",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tests/test-runner.js"
+  }
+}

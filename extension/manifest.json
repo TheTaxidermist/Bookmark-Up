@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Bookmark Up",
+  "version": "2.0.0",
+  "description": "Privately inspect bookmarks, review exact duplicate candidates, and apply only user-approved changes.",
+  "permissions": [
+    "bookmarks",
+    "downloads"
+  ],
+  "action": {
+    "default_title": "Bookmark Up",
+    "default_popup": "popup.html"
+  }
+}

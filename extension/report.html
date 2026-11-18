@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bookmark Up report</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Bookmark Up report</h1>
+        <p>No bookmark pages are opened or crawled. Exact duplicates are reports only until you review and confirm an action.</p>
+      </header>
+
+      <p id="status" role="status">Reading bookmarks…</p>
+
+      <section id="report" hidden>
+        <h2>Existing structure</h2>
+        <dl id="counts" class="counts"></dl>
+
+        <h2>Exact URL matches</h2>
+        <p>Only identical URL strings are grouped. Similar topics are not treated as duplicates, and the extension never picks a keeper automatically.</p>
+        <div id="duplicates"></div>
+
+        <h2>Choose a task</h2>
+        <form id="task-form">
+          <label for="task">Task</label>
+          <select id="task" required>
+            <option value="">Choose one…</option>
+            <option value="create-folder">Create a folder</option>
+            <option value="move-bookmark">Move a bookmark</option>
+            <option value="remove-duplicate">Remove exact duplicate bookmarks</option>
+          </select>
+
+          <div id="task-fields"></div>
+          <button type="submit">Review plan</button>
+        </form>
+
+        <section id="plan" hidden>
+          <h2>Reviewed plan</h2>
+          <p id="plan-summary"></p>
+          <p id="plan-safety"></p>
+          <div class="actions">
+            <button id="backup-apply" type="button">Back up JSON + HTML and apply</button>
+            <button id="risk-apply" class="secondary" type="button">Apply without a completed backup and confirm the risk</button>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="report.js"></script>
+  </body>
+</html>
